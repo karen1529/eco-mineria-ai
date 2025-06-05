@@ -83,70 +83,64 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#312e81] text-white p-4 font-sans">
+    <div className="container py-4">
       <Head><title>EcoMinerIA</title></Head>
 
-      <main className="max-w-4xl mx-auto bg-[#1f2937] p-6 rounded-2xl shadow-2xl">
-        <h1 className="text-3xl font-bold text-yellow-400 text-center mb-6">EcoMinerIA 🌍</h1>
+      <div className="bg-dark text-white p-5 rounded shadow-lg">
+        <h1 className="text-center text-warning mb-4">EcoMinerIA 🌍</h1>
 
-        <div className="space-y-3 h-[20rem] overflow-y-auto border border-yellow-500 p-4 rounded-md bg-[#111827]">
+        <div className="border border-warning p-3 mb-4 rounded overflow-auto" style={{ maxHeight: '300px' }}>
           {messages.map((msg, index) => (
-            <div key={index} className={`text-base ${msg.role === 'user' ? 'text-right text-yellow-300' : 'text-left text-white'}`}>
+            <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-end text-warning' : 'text-start text-white'}`}>
               <p>{msg.content}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="input-group mb-3">
           <input
             type="text"
+            className="form-control"
+            placeholder="Haz una pregunta sobre minería sostenible..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Haz una pregunta sobre minería sostenible..."
-            className="flex-1 p-3 rounded bg-[#0f172a] border border-gray-600 text-white"
           />
-          <button
-            onClick={sendMessage}
-            className="bg-yellow-400 text-black font-semibold px-6 py-2 rounded hover:bg-yellow-500"
-          >
+          <button className="btn btn-warning" onClick={sendMessage}>
             {loading ? '...' : 'Enviar'}
           </button>
         </div>
 
-        <div className="mt-10">
-          <h2 className="text-xl text-yellow-400 mb-4">❓ Preguntas Frecuentes</h2>
-          <div className="space-y-3">
-            {faqs.map((faq, idx) => (
-              <div key={idx}>
+        <h2 className="text-warning mt-5 mb-3">❓ Preguntas Frecuentes</h2>
+        <div className="accordion" id="faqAccordion">
+          {faqs.map((faq, idx) => (
+            <div className="accordion-item" key={idx}>
+              <h2 className="accordion-header">
                 <button
-                  className="w-full text-left px-4 py-2 bg-[#1e1b4b] hover:bg-[#3730a3] text-yellow-300 font-semibold rounded transition duration-200"
+                  className={`accordion-button ${faqAbierta === idx ? '' : 'collapsed'}`}
+                  type="button"
                   onClick={() => setFaqAbierta(faqAbierta === idx ? null : idx)}
                 >
                   {faq.pregunta}
                 </button>
-                {faqAbierta === idx && (
-                  <div className="p-3 bg-[#0f172a] border border-yellow-500 rounded-b text-sm text-gray-200">
-                    {faq.respuesta}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10">
-          <h2 className="text-xl text-yellow-400 mb-2">📄 Resumen de documento PDF</h2>
-          <input type="file" accept=".pdf" onChange={handlePdfUpload} className="mb-2 text-white" />
-          {pdfResumen && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold text-yellow-300 mb-2">📝 Contenido resumido:</h3>
-              <div className="max-h-[300px] overflow-y-auto p-4 border-2 border-yellow-500 rounded-xl bg-[#111827] shadow-inner text-sm whitespace-pre-wrap">
-                {pdfResumen}
+              </h2>
+              <div className={`accordion-collapse collapse ${faqAbierta === idx ? 'show' : ''}`}>
+                <div className="accordion-body bg-dark text-white">
+                  {faq.respuesta}
+                </div>
               </div>
             </div>
-          )}
+          ))}
         </div>
-      </main>
+
+        <h2 className="text-warning mt-5 mb-2">📄 Resumen de documento PDF</h2>
+        <input type="file" accept=".pdf" onChange={handlePdfUpload} className="form-control mb-3" />
+        {pdfResumen && (
+          <div className="border border-warning p-3 bg-secondary rounded">
+            <h5 className="text-warning mb-2">📝 Contenido resumido:</h5>
+            <pre className="text-white small">{pdfResumen}</pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
